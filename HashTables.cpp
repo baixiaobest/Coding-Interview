@@ -13,6 +13,8 @@
 #include <unordered_map>
 #include <assert.h>
 #include <list>
+#include <cmath>
+#include <limits.h>
 
 using namespace std;
 
@@ -25,7 +27,7 @@ string findNearestRepetition(vector<string>& paragraph){
     unordered_map<string, int> mapStr2Idx;
     int closestDist = INT_MAX;
     string closestWord = "";
-    
+
     for (int i=0; i<paragraph.size(); i++) {
         // check if word is seen before
         if (mapStr2Idx.find(paragraph[i]) != mapStr2Idx.end()) {
@@ -36,11 +38,11 @@ string findNearestRepetition(vector<string>& paragraph){
                 closestWord = paragraph[i];
             }
         }
-        
+
         // then update hash table
         mapStr2Idx[paragraph[i]] = i;
     }
-    
+
     return closestWord;
 }
 
@@ -65,24 +67,24 @@ struct TreeNodeH{
         right = nullptr;
         hashCode = 0;
     }
-    
+
     void leftAttach(TreeNodeH* leftNode){
         left = leftNode;
     }
-    
+
     void rightAttach(TreeNodeH* rightNode){
         right = rightNode;
     }
-    
+
     bool compare(const TreeNodeH *other) const{
         if(!other) return false;
-        
+
         bool leftCheck = (!left && !other->left) || (left && left->compare(other->left));
         bool rightCheck = (!right && !other->right) || (right && right->compare(other->right));
-        
+
         return data == other->data && leftCheck && rightCheck;
     }
-    
+
     bool operator==(const TreeNodeH &other) const{
         return compare(&other);
     }
@@ -98,14 +100,14 @@ size_t computeHashForTree(TreeNodeH* root){
     if (!root) {
         return 0;
     }
-    
+
     if(!(root->hashCode)){
     	size_t nodeHash = 3*root->data;
     	size_t leftHash = 5*computeHashForTree(root->left);
     	size_t rightHash = 7*computeHashForTree(root->right);
         root->hashCode = nodeHash+leftHash+rightHash;
     }
-    
+
     return root->hashCode;
 }
 
@@ -113,7 +115,7 @@ TreeNodeH* mergeRecursive(TreeNodeH* root, unordered_map<TreeNodeH, TreeNodeH*, 
     if (!root) {
         return root;
     }
-    
+
     if (treeSet.find(*root) != treeSet.end()) {
         return treeSet[*root];
     }else{
@@ -125,19 +127,19 @@ TreeNodeH* mergeRecursive(TreeNodeH* root, unordered_map<TreeNodeH, TreeNodeH*, 
 }
 
 vector<TreeNodeH*> mergeTrees(vector<TreeNodeH*> trees){
-    
+
     // map from hashCode to node
     unordered_map<TreeNodeH, TreeNodeH*, NodeHash> treeSet;
     // new trees
     vector<TreeNodeH*> resultTrees;
-    
+
     // for each tree
     for (int i=0; i<trees.size(); i++) {
         TreeNodeH* root = trees[i];
         computeHashForTree(root);
         resultTrees.push_back(mergeRecursive(root, treeSet));
     }
-    
+
     return resultTrees;
 }
 
@@ -150,8 +152,8 @@ vector<TreeNodeH*> mergeTrees(vector<TreeNodeH*> trees){
 //    tree1.leftAttach(&a);
 //    a.leftAttach(&b);
 //    b.leftAttach(&c);
-//    
-//    
+//
+//
 //    TreeNodeH tree2 = TreeNodeH(9);
 //    TreeNodeH d = TreeNodeH(11);
 //    TreeNodeH e = TreeNodeH(5);
@@ -161,24 +163,24 @@ vector<TreeNodeH*> mergeTrees(vector<TreeNodeH*> trees){
 //    tree2.leftAttach(&e);
 //    e.leftAttach(&f);
 //    e.rightAttach(&g);
-//    
-//    
+//
+//
 //    TreeNodeH tree3 = TreeNodeH(2);
 //    TreeNodeH h = TreeNodeH(1);
 //    TreeNodeH i = TreeNodeH(0);
 //    TreeNodeH j = TreeNodeH(5);
 //    TreeNodeH k = TreeNodeH(3);
 //    TreeNodeH l = TreeNodeH(7);
-//    
+//
 //    tree3.leftAttach(&h);
 //    h.leftAttach(&i);
 //    tree3.rightAttach(&j);
 //    j.leftAttach(&k);
 //    j.rightAttach(&l);
-//    
+//
 //    vector<TreeNodeH*> inputTrees = {&tree1, &tree2, &tree3};
 //    vector<TreeNodeH*> trees = mergeTrees(inputTrees);
-//    
+//
 //}
 
 
@@ -190,11 +192,11 @@ vector<TreeNodeH*> mergeTrees(vector<TreeNodeH*> trees){
 bool canBePalindrome(string str){
     vector<int> charCount = vector<int>(26, 0);
     int oddCount = 0;
-    
+
     for (int i=0; i<str.length(); i++) {
         charCount[str[i]-'a']++;
     }
-    
+
     for (int i=0; i<26; i++) {
         if (charCount[i] % 2 != 0) {
             oddCount++;
@@ -218,7 +220,7 @@ bool canBePalindrome(string str){
 struct Point{
     int x;
     int y;
-    
+
     Point(){
         x = 0; y = 0;
     }
@@ -242,33 +244,33 @@ class Line{
 public:
     pair<float, float> slope;
     pair<float, float> intercept;
-    
+
     Line(){
         slope = pair<int, int>(0,0);
         intercept = pair<int, int>(0,0);
     }
-    
+
     Line(Point& pt1, Point& pt2){
         float length;
-        
+
         // two point at the same location cannot form a line
         if (pt1 == pt2) {
             slope = pair<int, int>(0,0);
             intercept = pair<int, int>(0,0);
             return;
         }
-        
+
         if (pt1.x > pt2.x) {
             swap(pt1, pt2);
         }
-        
+
         // calculate normalized slope
         slope.first = pt2.x - pt1.x;
         slope.second = pt2.y - pt1.y;
         length = sqrt(slope.first * slope.first + slope.second * slope.second);
         slope.first /= length;
         slope.second /= length;
-        
+
         // calculate intercept at y axis or x axis
         if (pt1.y == pt2.y) {
             intercept = pair<int, int>(pt1.y, 0);
@@ -280,7 +282,7 @@ public:
             intercept = pair<float, float>(YIntercept, 0);
         }
     }
-    
+
     bool operator==(const Line& other) const{
         return slope == other.slope && intercept == other.intercept;
     }
@@ -298,14 +300,14 @@ Line GetLineWithMostPoints(vector<Point> points){
     unordered_map<Line, unordered_set<Point, HashPoint>, LineHash> mapLineToPoint;
     unsigned long max = 0;
     Line candidateLine; // line that may potentially go through most points
-    
+
     // for every pair of points in space forms a line
     for (int i=0; i<points.size(); i++) {
         for (int j=i+1; j<points.size(); j++) {
             // for every line, it is mapped to frequency
             Line line = Line(points[i], points[j]);
             auto it = mapLineToPoint.find(line);
-            
+
             if (it == mapLineToPoint.end()) {
                 mapLineToPoint[line] = unordered_set<Point, HashPoint>();
             }
@@ -313,7 +315,7 @@ Line GetLineWithMostPoints(vector<Point> points){
             mapLineToPoint[line].insert(points[j]);
         }
     }
-    
+
     // iterate through every line in the map and find the line with largest frequency
     for (auto it = mapLineToPoint.begin(); it != mapLineToPoint.end(); it++) {
         unsigned long pointSetSize = it->second.size();
@@ -322,14 +324,14 @@ Line GetLineWithMostPoints(vector<Point> points){
             max = (int) it->second.size();
         }
     }
-    
+
     return candidateLine;
 }
 
 //int main(){
 //    vector<Point> pointArr = {Point(1,2), Point(2,2), Point(2,1), Point(3,1), Point(3,3), Point(3,-1)};
 //    Line line = GetLineWithMostPoints(pointArr);
-//    
+//
 //}
 
 
@@ -346,11 +348,11 @@ pair<int, int> smallestSubarray(vector<string>& paragraph, vector<string>& query
     int start(0), end(0); // start and end point for smallest subarray
     int size = paragraph.size();
     int minLength = INT_MAX; // minimum length of subarray
-    
+
     for(int i=0; i<query.size(); i++){
         mapWord2Frequency[query[i]] = 0;
     }
-    
+
     while (right < size || right - left >= mapWord2Frequency.size()) {
         // if sliding window contains all the words, then store the subarray indices
         if (numUniqueWords >= mapWord2Frequency.size() && (right - left) < minLength) {
@@ -358,10 +360,10 @@ pair<int, int> smallestSubarray(vector<string>& paragraph, vector<string>& query
             end = right;
             minLength = right - left;
         }
-        
+
         // if sliding window does not contain all the words and right boundary can expand
         if(numUniqueWords < mapWord2Frequency.size() && right < size){
-            
+
             auto it = mapWord2Frequency.find(paragraph[right]);
             if (it != mapWord2Frequency.end()){
                 if (it->second == 0)
@@ -369,7 +371,7 @@ pair<int, int> smallestSubarray(vector<string>& paragraph, vector<string>& query
             	it->second += 1;
             }
             right++;
-            
+
         // sliding window contains all the words and thus we can shrink left boundary
         }else{
             auto it = mapWord2Frequency.find(paragraph[left]);
@@ -381,7 +383,7 @@ pair<int, int> smallestSubarray(vector<string>& paragraph, vector<string>& query
             left++;
         }
     }
-    
+
     return pair<int, int>(start, end);
 }
 
@@ -400,23 +402,23 @@ void printSubarray(vector<string>& paragraph, pair<int, int> idx){
 //    printSubarray(in1, res);
 //    res = smallestSubarray(in1, q12);
 //    printSubarray(in1, res);
-//    
+//
 //    vector<string> in2 = {"find", "me", "some", "food"};
 //    vector<string> q2 = {"find", "some"};
 //    res = smallestSubarray(in2, q2);
 //    printSubarray(in2, res);
-//    
+//
 //    vector<string> in3 = {"find", "me", "some", "food", "yes","find"};
 //    vector<string> q3 = {"find", "food"};
 //    res = smallestSubarray(in3, q3);
 //    printSubarray(in3, res);
-//    
-//    
+//
+//
 //    vector<string> in4 = {"find", "me", "some", "food", "yes","find","find","find","some","food"};
 //    vector<string> q4 = {"find", "some", "food"};
 //    res = smallestSubarray(in4, q4);
 //    printSubarray(in4, res);
-//    
+//
 //}
 
 
@@ -431,22 +433,22 @@ class KeywordSearch{
     int start;
     int end;
     int numUniqueWords;
-    
+
 public:
     KeywordSearch():start(0), end(0), minLength(INT_MAX), numUniqueWords(0){}
-    
+
     KeywordSearch(vector<string> keywords):start(0), end(0), minLength(INT_MAX), numUniqueWords(0)
     {
         SetKeywords(keywords);
     }
-    
+
     void SetKeywords(vector<string> keywords){
         clear();
         for (int i=0; i<keywords.size(); i++) {
             mapWord2Frequency[keywords[i]] = 0;
         }
     }
-    
+
     void clear(){
         mapWord2Frequency.clear();
         window.clear();
@@ -456,9 +458,9 @@ public:
         end = 0;
         numUniqueWords = 0;
     }
-    
+
     void digest(string word){
-        
+
         window.push_back(word);
         auto it = mapWord2Frequency.find(word);
         if (it != mapWord2Frequency.end()) {
@@ -466,15 +468,15 @@ public:
                 numUniqueWords++;
             it->second++;
         }
-        
+
         if (numUniqueWords >= mapWord2Frequency.size() && numUniqueWords!=0){
             string frontEle = "";
         	while (numUniqueWords >= mapWord2Frequency.size()) {
-            
+
             	frontEle = window.front();
                 window.pop_front();
             	auto it = mapWord2Frequency.find(frontEle);
-                
+
             	if (it != mapWord2Frequency.end()) {
                 	it->second--;
                 	if (it->second == 0)
@@ -491,7 +493,7 @@ public:
             }
         }
     }
-    
+
     vector<string> getSubArray(){
         return subarray;
     }
@@ -521,22 +523,22 @@ void KeywordTest(KeywordSearch& ks, vector<string> input){
 //    KeywordTest(ks, in1);
 //    ks.SetKeywords(q12);
 //    KeywordTest(ks, in1);
-//    
+//
 //    vector<string> in2 = {"find", "me", "some", "food"};
 //    vector<string> q2 = {"find", "some"};
 //    ks.SetKeywords(q2);
 //    KeywordTest(ks, in2);
-//    
+//
 //    vector<string> in3 = {"find", "me", "some", "food", "yes","find"};
 //    vector<string> q3 = {"find", "food"};
 //    ks.SetKeywords(q3);
 //    KeywordTest(ks, in3);
-//    
+//
 //    vector<string> in4 = {"find", "me", "some", "food", "yes","find","find","find","some","food"};
 //    vector<string> q4 = {"find", "some", "food"};
 //    ks.SetKeywords(q4);
 //    KeywordTest(ks, in4);
-//    
+//
 //    ks.SetKeywords({});
 //    KeywordTest(ks, in4);
 //}
@@ -554,20 +556,20 @@ private:
     list<pair<int, int>> cache;
     //            isbn      iterator to cache list node
     unordered_map<int, list<pair<int, int>>::iterator> hash;
-    
+
     void moveFront(list<pair<int, int>>::iterator it){
         pair<int, int> node = *it;
         cache.erase(it);
         cache.push_front(node);
         hash[node.first] = cache.begin();
     }
-    
+
 public:
     ISBNCache(int cap): capacity(cap){
         cache = list<pair<int, int>>();
         hash = unordered_map<int, list<pair<int, int>>::iterator>();
     }
-	
+
     // return price for book
     // return -1 if not found
     int lookupPrice(int isbn){
@@ -580,7 +582,7 @@ public:
         	return price;
         }
     }
-    
+
     void insert(int isbn, int price){
         auto it = hash.find(isbn);
         if (it != hash.end()) {
@@ -596,7 +598,7 @@ public:
             hash[isbn] = cache.begin();
         }
     }
-    
+
     void erase(int isbn){
         auto it = hash.find(isbn);
         if (it != hash.end()) {

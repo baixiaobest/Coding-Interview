@@ -12,6 +12,7 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <vector>
+#include <algorithm>
 
 
 using namespace std;
@@ -26,7 +27,7 @@ void runLengthEncoding(string& str){
     int expandSize = 0; // expand in size after input string is encoded
     int encodedPtr;     // on the right of this pointer is the encoded string to be returned
     int scanPtr;        // this pointer points to the character to be scanned
-    
+
     // first, calculate the shrink to determine if the string will be resized
     for (int i=0; i<str.size();) {
         char c = str[i];
@@ -37,14 +38,14 @@ void runLengthEncoding(string& str){
         }
         expandSize += count == 1 ? 1 : 0;
     }
-    
+
     scanPtr = (int) str.size() - 1;
     // encoded string is larger than original string, resize it
     if (expandSize > 0) {
         str.resize(str.size() + expandSize);
     }
     encodedPtr = (int) str.size()-1;
-    
+
     // start the encoding from the end of the original string
     while (scanPtr >= 0) {
         char c = str[scanPtr];
@@ -64,7 +65,7 @@ void runLengthEncoding(string& str){
 string encode(string str){
     string resStr="";
     int count = 1;
-    
+
     for (int i=1; i<=str.size(); i++) {
         if(i<str.size() && str[i] == str[i-1]){
             count++;
@@ -74,7 +75,7 @@ string encode(string str){
             count = 1;
         }
     }
-    
+
     return resStr;
 }
 
@@ -103,22 +104,22 @@ string decode(string str){
 //
 //    runLengthEncoding(a);
 //    assert(a == "1a1b1c1d1e");
-//    
+//
 //    runLengthEncoding(b);
 //    assert(b == "2a2b2c");
-//    
+//
 //    runLengthEncoding(c);
 //    assert(c == "5a1b1c1d1e");
-//    
+//
 //    runLengthEncoding(d);
 //    assert(d == "4a5b6c3d");
-//    
+//
 //    runLengthEncoding(e);
 //    assert(e == "1a1b1c1d7e");
-//    
+//
 //    runLengthEncoding(f);
 //    assert(f == "");
-//    
+//
 //    assert(decode(encode("abcde")) == "abcde");
 //    assert(decode(encode("aabbcc")) == "aabbcc");
 //    assert(decode(encode("aaaaabcde")) == "aaaaabcde");
@@ -177,7 +178,7 @@ int matchString(string searchStr, string text){
     int windowSize = searchStr.size();
     int left(0), right(0);
     unordered_map<char, int> mapCharFrequency;
-    
+
     for (int i=0; i<searchStr.size(); i++) {
         auto it = mapCharFrequency.find(searchStr[i]);
         if (it == mapCharFrequency.end()) {
@@ -187,10 +188,10 @@ int matchString(string searchStr, string text){
         }
     }
     numUniqueChar = (int)mapCharFrequency.size();
-    
+
     while (right < text.size()) {
         char c = text[right];
-        
+
         // expand the right boundary, and decrement the frequency of the character in the hash
         auto it = mapCharFrequency.find(c);
         if(it != mapCharFrequency.end()){
@@ -200,7 +201,7 @@ int matchString(string searchStr, string text){
             }
         }
         right++;
-        
+
         // if the window is too big, shrink the window by incrementing left boundary
         // update the frequency of the deleted character as well
         if (right - left > windowSize) {
@@ -213,13 +214,13 @@ int matchString(string searchStr, string text){
             }
             left++;
         }
-        
+
         // if all characters frequencies are match, we compare the string
         if (numUniqueChar == 0 && text.compare(left, right-left, searchStr) == 0) {
             return left;
         }
     }
-    
+
     return -1;
 }
 
@@ -236,31 +237,31 @@ int matchString2(string searchStr, string text){
     if (searchStr.size() > text.size()) {
         return -1;
     }
-    
+
     int hashSearch = 0;
     int hashText = 0;
     int left = 0;
     int right = searchStr.size();
     int base = 100;
     int mod = 1000;
-    
+
     // calculate the hash for search string and hash for initial window
     for (int i=0; i<searchStr.size(); i++) {
         hashSearch = (hashSearch*base + searchStr[i]) % mod;
         hashText = (hashText*base + text[i]) % mod;
     }
-    
+
     while (right < text.size()) {
         // if the hash match, compare the string inside the sliding window and the search string
         if (hashSearch == hashText && text.compare(left, right-left, searchStr)==0) {
             return left;
         }
-        
+
         // update the rolling hash by inserting new character and removing old character
         hashText = (hashText*base + text[right]) % mod;
         hashText -= text[left]*(int)pow(base, right-left-1) % mod;
         hashText = hashText < 0 ? hashText + mod : hashText;
-        
+
         // update the window pointers
         right++;
         left++;
@@ -269,7 +270,7 @@ int matchString2(string searchStr, string text){
     if (hashSearch == hashText && text.compare(left, right-left, searchStr)==0) {
         return left;
     }
-    
+
     return -1;
 }
 
@@ -289,32 +290,32 @@ void replaceAndRemove(string& str){
     int expandSize = 0;
     int scanPtr = str.size()-1;
     int resPtr;
-    
+
     for (int i=0; i<str.size(); i++) {
         if (str[i] == 'a') {
             expandSize++;
         }
     }
-    
+
 	str.resize(str.size()+expandSize);
     resPtr = str.size()-1;
-    
+
     while (scanPtr >= 0) {
         if (str[scanPtr] == 'a') {
             str[resPtr--] = 'd';
             str[resPtr--] = 'd';
-            
+
         }else if(str[scanPtr] != 'b'){
             str[resPtr--] = str[scanPtr];
         }
-        
+
         scanPtr--;
     }
     resPtr++;
-    
+
     // this will copy character from string
     str = str.substr(resPtr, str.size() - resPtr);
-    
+
 }
 
 //int main(){
@@ -323,19 +324,19 @@ void replaceAndRemove(string& str){
 //    string c = "a";
 //    string e = "b";
 //    string f = "";
-//    
+//
 //    replaceAndRemove(a);
 //    assert(a=="ddcde");
-//    
+//
 //    replaceAndRemove(b);
 //    assert(b=="ddddddcde");
-//    
+//
 //    replaceAndRemove(c);
 //    assert(c=="dd");
-//    
+//
 //    replaceAndRemove(e);
 //    assert(e=="");
-//    
+//
 //    replaceAndRemove(f);
 //    assert(f=="");
 //}
@@ -353,7 +354,7 @@ void phoneNumberMnemonicHelper(string& phoneNumber, int idx, string& currStr){
         cout << currStr << endl;
         return;
     }
-    
+
     string charSet = number2chars[phoneNumber[idx]-'0'];
     for (int i=0; i<charSet.size(); i++) {
         currStr.push_back(charSet[i]);

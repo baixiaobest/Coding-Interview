@@ -14,6 +14,8 @@
 #include <vector>
 #include <queue>
 #include <unordered_set>
+#include <algorithm>
+#include <limits.h>
 
 using namespace std;
 
@@ -29,15 +31,15 @@ void threeWayPartition(vector<int>& arr, int idx){
     int countEqual = 0;
     int ptrLess(0), ptrEqual(0), ptrLarge(0);
     int partition = arr[idx];
-    
+
     for (int i=0; i<arr.size(); i++) {
         if (arr[i] < partition) countLess++;
         if (arr[i] == partition) countEqual++;
     }
-    
+
     ptrEqual = countLess;
     ptrLarge = countLess + countEqual;
-    
+
     for (int i=0; i<arr.size(); i++) {
         if (arr[i] == partition && (i < countLess || i >= countLess + countEqual)) {
             swap(arr[i], arr[ptrEqual++]);
@@ -56,7 +58,7 @@ void threeWayPartition2(vector<int>& arr, int idx){
     int ptrLess(0), ptrLarge(arr.size()-1);
     int ptr=0;
     int partition = arr[idx];
-    
+
     while (ptr <= ptrLarge) {
         if (arr[ptr] < partition) {
             swap(arr[ptr++], arr[ptrLess++]);
@@ -96,13 +98,13 @@ void printVecInt(vector<int>& Arr){
 int maxSellPrice(vector<int>& arr){
     int minPrice = INT_MAX;
     int maxProfits = 0;
-    
+
     for (int i=0; i<arr.size(); i++) {
         int profits = arr[i] - minPrice;
         maxProfits = max(profits, maxProfits);
         minPrice = min(minPrice, arr[i]);
     }
-    
+
     return maxProfits;
 }
 
@@ -130,29 +132,29 @@ int maxTwoPairProfits(vector<int>& arr){
     int maxProfits = 0;
     vector<int> leftSubarrayMaxProfit = vector<int>(arr.size(), 0);
     vector<int> rightSubarrayMaxProfit = vector<int>(arr.size(), 0);
-    
+
     for (int i=0; i<arr.size(); i++) {
         int profits = arr[i] - minPrice;
         maxProfits = max(maxProfits, profits);
         minPrice = min(minPrice, arr[i]);
         leftSubarrayMaxProfit[i] = maxProfits;
     }
-    
+
     maxProfits = 0;
-    
+
     for (int i=arr.size()-1; i >= 0; i--) {
         int profits = maxPrice - arr[i];
         maxProfits = max(maxProfits, profits);
         maxPrice = max(maxPrice, arr[i]);
         rightSubarrayMaxProfit[i] = maxProfits;
     }
-    
+
     maxProfits = 0;
-    
+
     for (int i=0; i<arr.size(); i++) {
         maxProfits = max(maxProfits, leftSubarrayMaxProfit[i] + rightSubarrayMaxProfit[i]);
     }
-    
+
     return maxProfits;
 }
 
@@ -169,12 +171,12 @@ int maxTwoPairProfits(vector<int>& arr){
 pair<int, int> sumSubsetToZero(vector<int>& arr){
     vector<int> prefixSum = arr;
     vector<int> table = vector<int>(arr.size(), -1);
-    
+
     for (int i=0; i<arr.size(); i++) {
         prefixSum[i] += i > 0 ? prefixSum[i-1] : 0;
         prefixSum[i] %= arr.size();
     }
-    
+
     for (int i=0; i<prefixSum.size(); i++) {
         if (prefixSum[i] == 0) {
             return pair<int, int>(0, i);
@@ -204,7 +206,7 @@ pair<int, int> longestIncreasingSubarray(vector<int> arr){
     int start(0), end(0);
     int prevNum = INT_MIN;
     int maxLength = 0;
-    
+
     for (; end<arr.size(); end++) {
         if (arr[end] <= prevNum) {
             start = end;
@@ -214,7 +216,7 @@ pair<int, int> longestIncreasingSubarray(vector<int> arr){
             globalStart = start;
             globalEnd = end;
         }
-        
+
         prevNum = arr[end];
     }
     return pair<int, int>(globalStart, globalEnd);
@@ -238,7 +240,7 @@ class BigInt{
 private:
     bool negative;
     string number;
-    
+
     void shiftLeft(string& str, int num) const{
         for (int i=0; i<num; i++) {
             str += '0';
@@ -248,59 +250,59 @@ private:
         int size = (int)max(str1.size(), str2.size());
         int carry = 0;
         string result = "";
-        
+
         for (int i=0; i<size || carry; i++) {
             int idx1 = str1.size()-1-i;
             int idx2 = str2.size()-1-i;
             int digit1 = idx1 < str1.size() && idx1 >=0 ? str1[idx1] - '0' : 0;
             int digit2 = idx2 < str2.size() && idx2 >=0 ? digit2 = str2[idx2] - '0' : 0;
-            
+
             int addition = digit1 + digit2 + carry;
             result = to_string(addition%10) + result;
             carry = addition/10;
         }
         return result;
     }
-    
+
 public:
     BigInt(): negative(false), number(""){}
     BigInt(string str, bool sign): negative(sign), number(str){}
-    
+
     string getNumber() const{
         return number;
     }
-    
+
     bool getSign() const{
         return negative;
     }
-    
+
     BigInt operator*(const BigInt& other) const{
     	string result = "";
         string otherNum = other.getNumber();
-        
+
         // for each digit in this bigint
         for (int i=0; i<number.size(); i++) {
             string digitMulIntStr="";
             int carry = 0;
             int digit1 = number[number.size()-i-1] - '0';
-            
+
             // for each digit in other bigint
             for (int j=0; j<otherNum.size() || carry; j++) {
                 int digit2 = j < otherNum.size() ? otherNum[otherNum.size()-j-1] - '0' : 0;
-                
+
                 int mulResult = digit1*digit2 + carry;
                 char resultDigit = mulResult%10 + '0';
                 digitMulIntStr = resultDigit + digitMulIntStr;
-                
+
                 carry = mulResult/10;
             }
             shiftLeft(digitMulIntStr, i);
             result = add(result, digitMulIntStr);
         }
-        
+
         return BigInt(result, other.getSign() ^ negative);
     }
-    
+
     void printNumber(){
     	if(negative)
             cout << "-";
@@ -363,7 +365,7 @@ void permuateArray(vector<int>& arr, vector<int> P){
 
 vector<int> inversePermutation(vector<int> P){
     vector<int> invP(P.size());
-    
+
     for (int i=0; i<P.size(); i++) {
         if (P[i] < 0) {
             continue;
@@ -409,7 +411,7 @@ bool nextPermutation(vector<int>& perm){
     int left = perm.size()-2;
     int right = perm.size()-1;
     int swapCandidateIdx = 0;
-    
+
     // from right to left, find descending point
     while (left >= 0) {
         if (perm[left] < perm[right]) {
@@ -418,10 +420,10 @@ bool nextPermutation(vector<int>& perm){
         left--;
         right--;
     }
-    
+
     // descending point cannot be found
     if (left < 0) return false;
-    
+
     // find the minimum value element that is larger than descending point element
     for (int i=right; i<perm.size() && perm[i] > perm[left]; i++) {
         swapCandidateIdx = i;
@@ -439,7 +441,7 @@ bool previousPermutation(vector<int>& perm){
     int left = perm.size()-2;
     int right = perm.size()-1;
     int swapCandidateIdx = 0;
-    
+
     // from right to left, find ascending point
     while (left >= 0) {
         if (perm[left] > perm[right]) {
@@ -448,15 +450,15 @@ bool previousPermutation(vector<int>& perm){
         left--;
         right--;
     }
-    
+
     // descending point cannot be found
     if (left < 0) return false;
-    
+
     // find the maximum value element that is smaller than descending point element
     for (int i=right; i<perm.size() && perm[i] < perm[left]; i++) {
         swapCandidateIdx = i;
     }
-    
+
     swap(perm[left], perm[swapCandidateIdx]);
     reverse(perm.begin()+right, perm.end());
     return true;
@@ -467,9 +469,9 @@ bool previousPermutation(vector<int>& perm){
 //    do{
 //        printVecInt(perm);
 //    }while(nextPermutation(perm));
-//    
+//
 //    cout << "-----------" << endl;
-//    
+//
 //    do{
 //        printVecInt(perm);
 //    }while(previousPermutation(perm));
@@ -497,7 +499,7 @@ void rotateArray(vector<int>& arr, int shift){
     int prevVal=arr[i];
     bool startVisited = false;
     shift = shift % arr.size();
-    
+
     while (visited <= arr.size()) {
         swap(arr[i], prevVal);
         if(i==start && startVisited){
@@ -518,7 +520,7 @@ void rotateArray2(vector<int>& arr, int shift){
     shift = shift % arr.size();
     int numPermCycles = gcd(arr.size(), shift);
     int hops = arr.size() / numPermCycles;
-    
+
     for (int i=0; i<numPermCycles; i++) {
         prevVal = arr[i];
         for (int j=0; j<=hops; j++) {
@@ -555,7 +557,7 @@ void rotateArray3(vector<int>& arr, int shift){
 // 0 represents unfilled entry
 bool validSudoku(vector<vector<int>>& sudoku){
     unordered_set<int> hash;
-    
+
     // check row by row
     // see if there are duplicates in a row
     for (int row=0; row<sudoku.size(); row++) {
@@ -567,7 +569,7 @@ bool validSudoku(vector<vector<int>>& sudoku){
             }
             // ignore empty entry
             if (sudoku[row][col] == 0) continue;
-            
+
             // check if the number appears more than once
             auto it = hash.find(sudoku[row][col]);
             if (it != hash.end()) {
@@ -576,7 +578,7 @@ bool validSudoku(vector<vector<int>>& sudoku){
             hash.insert(sudoku[row][col]);
         }
     }
-    
+
     // check column by column
     // see if there are duplicates in a column
     for (int col=0; col<sudoku[0].size(); col++) {
@@ -584,7 +586,7 @@ bool validSudoku(vector<vector<int>>& sudoku){
         for (int row=0; row<sudoku.size(); row++) {
             // ignore empty entry
             if (sudoku[row][col] == 0) continue;
-            
+
             auto it = hash.find(sudoku[row][col]);
             if (it != hash.end()) {
                 return false;
@@ -592,7 +594,7 @@ bool validSudoku(vector<vector<int>>& sudoku){
             hash.insert(sudoku[row][col]);
         }
     }
-    
+
     // check block by block
     // see if there are duplicates in a block of 3x3 subsquare
     for (int i=0; i<3; i++) {
@@ -602,7 +604,7 @@ bool validSudoku(vector<vector<int>>& sudoku){
                 for (int col = 3*j; col<3*(j+1); col++) {
                     // ignore empty entry
                     if (sudoku[row][col] == 0) continue;
-                    
+
                     auto it = hash.find(sudoku[row][col]);
                     if (it != hash.end()) {
                         return false;
@@ -612,7 +614,7 @@ bool validSudoku(vector<vector<int>>& sudoku){
             }
         }
     }
-    
+
     return true;
 }
 
@@ -629,7 +631,7 @@ bool validSudoku(vector<vector<int>>& sudoku){
 //        {0,0,0,0,0,0,0,7,0},
 //        {0,0,0,0,0,0,0,8,0}
 //    };
-//    
+//
 //    cout << validSudoku(sudoku);
 //}
 
@@ -693,20 +695,20 @@ void floodFill(vector<vector<bool>>& image, int x, int y){
     if (x < 0 || x >= width || y < 0 || y >= height) {
         return;
     }
-    
+
     bool color = image[y][x];
     queue<pair<int, int>> myQueue;
     myQueue.push(pair<int, int>(x,y));
-    
+
     while (!myQueue.empty()) {
         int currX = myQueue.front().first;
         int currY = myQueue.front().second;
         myQueue.pop();
-        
+
         if (image[currY][currX] != color) {
             continue;
         }
-        
+
         image[currY][currX] = !color; // flip color
         if (currX - 1 >= 0) {
             myQueue.push(pair<int, int>(currX-1, currY));
@@ -754,7 +756,7 @@ void rotateMatrix(vector<vector<int>>& matrix){
     int start = 0;
     int end = matrix.size()-1;
     int size = matrix.size();
-    
+
     while (start < end) {
         for (int i=start; i<end; i++) {
             swap(matrix[size-i-1][start], matrix[end][size-i-1]); // swap left side with bottom side
@@ -779,7 +781,7 @@ void print2DVecInt(vector<vector<int>>& matrix){
 //        {9, 10,11,12},
 //        {13,14,15,16},
 //    };
-//    
+//
 //    rotateMatrix(matrix);
 //    print2DVecInt(matrix);
 //}

@@ -19,10 +19,10 @@ using namespace std;
 SLLNode* mergeTwoLinkedLists(SLLNode* L, SLLNode* R){
     if (!L) return R;
     if (!R) return L;
-    
+
     SLLNode* M = nullptr;
     SLLNode* MTail = nullptr;
-    
+
     while (L && R) {
         // select the smallest node from two linked list
         SLLNode* newNode = nullptr;
@@ -33,7 +33,7 @@ SLLNode* mergeTwoLinkedLists(SLLNode* L, SLLNode* R){
             newNode = L;
             L = L->next;
         }
-        
+
         // append new node to new linked list
         if (!M) {
             M = newNode;
@@ -49,7 +49,7 @@ SLLNode* mergeTwoLinkedLists(SLLNode* L, SLLNode* R){
     if (R) {
         MTail->next = R;
     }
-    
+
     return M;
 }
 
@@ -57,10 +57,10 @@ SLLNode* mergeTwoLinkedLists(SLLNode* L, SLLNode* R){
 //int main(){
 //    SLLNode* L = new SLLNode(1);
 //    L->Emplace(3)->Emplace(5)->Emplace(7)->Emplace(9);
-//    
+//
 //    SLLNode* R = new SLLNode(2);
 //    R->Emplace(4)->Emplace(6);
-//    
+//
 //    SLLNode* M = mergeTwoLinkedLists(L, R);
 //    M->PrintListNode();
 //}
@@ -82,11 +82,11 @@ SLLNode* findCycle(SLLNode* head){
     if (!head) {
         return head;
     }
-    
+
     SLLNode* slow = head;
     SLLNode* fast = head->next;
     int cycleSize = 0;
-    
+
     while (fast && fast->next && fast != slow) {
         // increment fast pointer by two
         fast = fast->next->next;
@@ -96,16 +96,16 @@ SLLNode* findCycle(SLLNode* head){
     if (fast != slow) {
         return nullptr;
     }
-    
+
     // calculate cycle length
     do{
         slow = slow->next;
         cycleSize++;
     }while(slow != fast);
-    
+
     slow = head;
     fast = head;
-    
+
     // offset the fast pointer by cycle size
     while (cycleSize > 0) {
         fast = fast->next;
@@ -116,24 +116,24 @@ SLLNode* findCycle(SLLNode* head){
         slow = slow->next;
         fast = fast->next;
     }
-    
+
     return fast;
 }
 
 //int main(){
 //    SLLNode* a = new SLLNode(1);
-//    
+//
 //    assert(findCycle(nullptr) == nullptr);
 //    assert(findCycle(a) == nullptr);
-//    
+//
 //    SLLNode* cycleStart = a->Emplace(2)->Emplace(3)->Emplace(4);
 //    cycleStart->next = cycleStart;
-//    
+//
 //    assert(findCycle(a)->data == 4);
-//    
+//
 //    cycleStart->Emplace(5)->Emplace(6)->Emplace(7)->Emplace(8);
 //    assert(findCycle(a) == nullptr);
-//    
+//
 //    cycleStart->next = cycleStart;
 //    assert(findCycle(a)->data == 4);
 //}
@@ -162,7 +162,7 @@ int medianLinkedList(SLLNode* ptr){
     SLLNode* fast = head;
     SLLNode* slow = head;
     SLLNode* prevPtr = head;
-    
+
     // increment fast pointer two steps and slow pointer one step
     // if faster pointer stops at tail, then size is odd, then slow pointer value is median
     // if faster pointer stops at head, then size is even, then slow pointer value is average of prevPtr and slow pointer
@@ -171,25 +171,25 @@ int medianLinkedList(SLLNode* ptr){
         prevPtr = slow;
         slow = slow->next;
     }while(fast != tail && fast!= head);
-        
+
     return fast == tail ? slow->data : (slow->data + prevPtr->data) / 2;
 }
 
 //int main(){
 //    SLLNode* a = new SLLNode(1);
 //    a->next = a;
-//    
+//
 //    assert(medianLinkedList(a) == 1);
-//    
+//
 //    a->Emplace(3)->next = a;
 //    assert(medianLinkedList(a) == 2);
-//    
+//
 //    a->next->Emplace(4)->next = a;
 //    assert(medianLinkedList(a) == 3);
-//    
+//
 //    a->next->next->Emplace(8)->next = a;
 //    assert(medianLinkedList(a) == 3);
-//    
+//
 //    SLLNode* b = new SLLNode(2);
 //    b->Emplace(2)->Emplace(2)->Emplace(2)->next = b;
 //    assert(medianLinkedList(b) == 2);
@@ -197,7 +197,78 @@ int medianLinkedList(SLLNode* ptr){
 
 
 
+/////////////////////////////////////////////////////////////////////
+// find the node where two overlapping linked list meet
+/////////////////////////////////////////////////////////////////////
 
+pair<int, SLLNode*> listLength(SLLNode* head){
+    int length = 0;
+    SLLNode* prev = head;
+
+    while(head){
+        length++;
+        prev = head;
+        head = head->next;
+    }
+    return pair<int, SLLNode*>(length, prev);
+}
+
+
+SLLNode* overlapNode(SLLNode* L, SLLNode* R){
+    if(!L || !R)
+        return nullptr;
+
+    int Llength, Rlength, lengthDiff;
+    pair<int, SLLNode*> left = listLength(L);
+    pair<int, SLLNode*> right = listLength(R);
+    Llength = left.first;
+    Rlength = right.first;
+
+    // two linked list do not ends at the same node
+    // therefore they are not overlapping
+    if(left.second != right.second)
+        return nullptr;
+
+    // make sure L pointer is the longer list
+    if(Rlength > Llength){
+        swap(L, R);
+    }
+    lengthDiff = abs(Llength - Rlength);
+
+    // offset the left linked list by length difference
+    for (int i=0; i<lengthDiff; i++){
+        L = L->next;
+    }
+
+    // start traversing both linked list until they meet up
+    while(L != R){
+        L = L->next;
+        R = R->next;
+    }
+
+    return L;
+}
+
+int main(){
+    SLLNode* a = new SLLNode(1);
+    SLLNode* aTail = a->Emplace(2)->Emplace(3);
+
+    SLLNode* b = new SLLNode(4);
+    SLLNode* bTail = b->Emplace(5)->Emplace(6)->Emplace(7);
+
+    assert(overlapNode(nullptr, nullptr) == nullptr);
+    assert(overlapNode(nullptr, a) == nullptr);
+    assert(overlapNode(a,b) == nullptr);
+
+    aTail->next = bTail;
+    assert(overlapNode(a,b)->data == 7);
+
+    aTail->next = b->next;
+    assert(overlapNode(a,b)->data == 5);
+
+    aTail->next = b;
+    assert(overlapNode(a,b)->data == 4);
+}
 
 
 
