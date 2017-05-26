@@ -249,26 +249,80 @@ SLLNode* overlapNode(SLLNode* L, SLLNode* R){
     return L;
 }
 
-int main(){
-    SLLNode* a = new SLLNode(1);
-    SLLNode* aTail = a->Emplace(2)->Emplace(3);
+//int main(){
+//    SLLNode* a = new SLLNode(1);
+//    SLLNode* aTail = a->Emplace(2)->Emplace(3);
+//
+//    SLLNode* b = new SLLNode(4);
+//    SLLNode* bTail = b->Emplace(5)->Emplace(6)->Emplace(7);
+//
+//    assert(overlapNode(nullptr, nullptr) == nullptr);
+//    assert(overlapNode(nullptr, a) == nullptr);
+//    assert(overlapNode(a,b) == nullptr);
+//
+//    aTail->next = bTail;
+//    assert(overlapNode(a,b)->data == 7);
+//
+//    aTail->next = b->next;
+//    assert(overlapNode(a,b)->data == 5);
+//
+//    aTail->next = b;
+//    assert(overlapNode(a,b)->data == 4);
+//}
 
-    SLLNode* b = new SLLNode(4);
-    SLLNode* bTail = b->Emplace(5)->Emplace(6)->Emplace(7);
 
-    assert(overlapNode(nullptr, nullptr) == nullptr);
-    assert(overlapNode(nullptr, a) == nullptr);
-    assert(overlapNode(a,b) == nullptr);
 
-    aTail->next = bTail;
-    assert(overlapNode(a,b)->data == 7);
+/////////////////////////////////////////////////////////////////////
+// Even Odd merge
+// reorder the linked list such that the even index nodes come
+// before the odd index nodes.
+/////////////////////////////////////////////////////////////////////
 
-    aTail->next = b->next;
-    assert(overlapNode(a,b)->data == 5);
 
-    aTail->next = b;
-    assert(overlapNode(a,b)->data == 4);
+SLLNode* evenOddMerge(SLLNode* head){
+    if(!head) return head;
+
+    SLLNode* headPtr = head;
+    SLLNode* oddHead = head->next;
+    SLLNode* evenPtr = nullptr;
+    SLLNode* oddPtr = nullptr;
+
+    bool even = true;
+
+    while(headPtr){
+        if(even){
+            if(evenPtr)
+                evenPtr->next = headPtr;
+            evenPtr = headPtr;
+        }else{
+            if(oddPtr)
+                oddPtr->next = headPtr;
+            oddPtr = headPtr;
+        }
+        even = !even;
+        headPtr = headPtr->next;
+    }
+
+    if(oddPtr)
+        oddPtr->next = nullptr;
+
+    evenPtr->next = oddHead;
+
+    return head;
 }
+
+
+int main(){
+    SLLNode* a = new SLLNode(0);
+
+    evenOddMerge(a)->PrintListNode();
+    cout << endl;
+
+    a->Emplace(1)->Emplace(2)->Emplace(3)->Emplace(4)->Emplace(5)->Emplace(6)->Emplace(7)->Emplace(8)->Emplace(9);
+    evenOddMerge(a)->PrintListNode();
+}
+
+
 
 
 
