@@ -485,7 +485,63 @@ SLLNode* reverseLinkedList(SLLNode* head){
 
 
 
+/////////////////////////////////////////////////////////////////////
+// Palindrome linked list
+/////////////////////////////////////////////////////////////////////
 
+// this function will modify original linked list
+bool isPalindrome(SLLNode* head){
+    if (!head) return false;
+    
+    SLLNode* slow = head;
+    SLLNode* fast = head;
+    SLLNode* reversedList;
+    
+    // find the middle of linked list
+    while (fast && fast->next) {
+        fast = fast->next->next;
+        slow = slow->next;
+    }
+    reversedList = reverseLinkedList(slow);
+    
+    while (reversedList) {
+        if (head->data != reversedList->data) {
+            return false;
+        }
+        head = head->next;
+        reversedList = reversedList->next;
+    }
+    
+    return true;
+}
+
+
+//int main(){
+//    SLLNode* a = new SLLNode(1);
+//
+//    assert(isPalindrome(a));
+//    
+//    a = new SLLNode(1);
+//    a->Emplace(1);
+//    assert(isPalindrome(a));
+//    
+//    a = new SLLNode(1);
+//    a->Emplace(2);
+//    a->Emplace(1);
+//    assert(isPalindrome(a));
+//    
+//    a = new SLLNode(1);
+//    a->Emplace(2)->Emplace(3)->Emplace(2)->Emplace(1);
+//    assert(isPalindrome(a));
+//    
+//    a = new SLLNode(1);
+//    a->Emplace(2);
+//    assert(!isPalindrome(a));
+//    
+//    a = new SLLNode(1);
+//    a->Emplace(2)->Emplace(3)->Emplace(1)->Emplace(1);
+//    assert(!isPalindrome(a));
+//}
 
 
 
