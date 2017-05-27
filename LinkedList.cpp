@@ -312,15 +312,180 @@ SLLNode* evenOddMerge(SLLNode* head){
 }
 
 
-int main(){
-    SLLNode* a = new SLLNode(0);
+//int main(){
+//    SLLNode* a = new SLLNode(0);
+//
+//    evenOddMerge(a)->PrintListNode();
+//    cout << endl;
+//
+//    a->Emplace(1)->Emplace(2)->Emplace(3)->Emplace(4)->Emplace(5)->Emplace(6)->Emplace(7)->Emplace(8)->Emplace(9);
+//    evenOddMerge(a)->PrintListNode();
+//}
 
-    evenOddMerge(a)->PrintListNode();
-    cout << endl;
 
-    a->Emplace(1)->Emplace(2)->Emplace(3)->Emplace(4)->Emplace(5)->Emplace(6)->Emplace(7)->Emplace(8)->Emplace(9);
-    evenOddMerge(a)->PrintListNode();
+/////////////////////////////////////////////////////////////////////
+// Delete element from singly linked list
+// with O(1) time O(1) space to delete non-tail node
+// O(n) time to delete tail node
+/////////////////////////////////////////////////////////////////////
+
+SLLNode* deleteNode(SLLNode* head, SLLNode* node){
+    
+    // deleting the linked list with single element
+    if(!head->next && head==node){
+        head = nullptr;
+        delete node;
+        
+    // node is the last element
+    }else if (!node->next) {
+        SLLNode* ptr = head;
+        while (ptr->next && ptr->next != node) {
+            ptr = ptr->next;
+        }
+        ptr->next = nullptr;
+    
+        delete node;
+        
+    // node is in the middle of the list
+    }else{
+        node->data = node->next->data;
+        node->next = node->next->next;
+        delete node->next;
+    }
+    return head;
 }
+
+//int main(){
+//    SLLNode* a = new SLLNode(1);
+//    
+//    // delete list with single element
+//    assert(deleteNode(a, a) == nullptr);
+//    
+//    // delete element from the last
+//    a = new SLLNode(1);
+//    SLLNode* aTail = a->Emplace(2)->Emplace(3)->Emplace(4);
+//    deleteNode(a, aTail)->PrintListNode();   // 1 2 3
+//    cout << endl;
+//    
+//    
+//    // delete element in the middle
+//    SLLNode* a2 = a->next;
+//    deleteNode(a, a2)->PrintListNode();  // 1 3
+//    cout << endl;
+//    
+//    // delete first element from list of size more than 1
+//    deleteNode(a, a)->PrintListNode(); // 3
+//}
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+// Delete K-th last node from linked list
+/////////////////////////////////////////////////////////////////////
+
+
+SLLNode* deleteKthLastNode(SLLNode* head, int k){
+    SLLNode* slow = head;
+    SLLNode* fast = head;
+    SLLNode* prev = head;
+    
+    // offset the fast pointer by K
+    while (fast && k > 0) {
+        fast = fast->next;
+        k--;
+    }
+    // k is larger than size of linked list
+    if (!fast) return head;
+	
+    // move fast and slow pointers at the same pace
+    // record previout pointer of slow, convinient for deletion
+    while (fast->next) {
+        fast = fast->next;
+        prev = slow;
+        slow = slow->next;
+    }
+    
+    // slow is pointing at head, move the head to second node
+    if (slow == head) {
+        head = head->next;
+    }
+    
+    // delete the node pointed by slow pointer
+    prev->next = slow->next;
+    delete slow;
+    
+    return head;
+}
+
+
+//int main(){
+//	SLLNode* a = new SLLNode(1);
+//    assert(deleteKthLastNode(a, 0) == nullptr);
+//    
+//    a = new SLLNode(1);
+//    a->Emplace(2)->Emplace(3)->Emplace(4)->Emplace(5)->Emplace(6);
+//    
+//    // k out of range
+//    a = deleteKthLastNode(a, 6);
+//    a->PrintListNode(); // 1 2 3 4 5 6
+//    cout << endl;
+//    
+//    // kth last node is the last node
+//    a = deleteKthLastNode(a, 0);
+//    a->PrintListNode(); // 1 2 3 4 5
+//    cout << endl;
+//    
+//    // kth last node is the first node
+//    a = deleteKthLastNode(a, 4);
+//    a->PrintListNode(); // 2 3 4 5
+//    cout << endl;
+//    
+//    // kth last node is the middle node
+//    a = deleteKthLastNode(a, 2);
+//    a->PrintListNode(); //2 4 5;
+//}
+
+
+
+/////////////////////////////////////////////////////////////////////
+// reverse linked list
+/////////////////////////////////////////////////////////////////////
+
+
+SLLNode* reverseLinkedList(SLLNode* head){
+    if(!head) return head;
+    
+    SLLNode* left = head;
+    SLLNode* right = head->next;
+    head->next = nullptr;
+    
+    while (right) {
+        SLLNode* next = right->next;
+        right->next = left;
+        left = right;
+        right = next;
+    }
+    
+    return left;
+}
+
+
+//int main(){
+//    SLLNode* a = new SLLNode(1);
+//    
+//    a = reverseLinkedList(a);
+//    a->PrintListNode();         // 1
+//    cout << endl;
+//    
+//    a->Emplace(2)->Emplace(3)->Emplace(4)->Emplace(5)->Emplace(6)->Emplace(7);
+//    a = reverseLinkedList(a);
+//    a->PrintListNode();
+//}
+
+
+
+
 
 
 
