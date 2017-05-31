@@ -545,5 +545,83 @@ bool isPalindrome(SLLNode* head){
 
 
 
+/////////////////////////////////////////////////////////////////////
+// Zipping a linked list
+// list of 0->1->2->3->4->5->6 will be zipped into
+// list of 0->6->1->5->2->4->3
+/////////////////////////////////////////////////////////////////////
+
+
+SLLNode* zipLinkedList(SLLNode* head){
+    if (!head || !head->next) {
+        return head;
+    }
+    
+    SLLNode* slow = head;
+    SLLNode* fast = head;
+    SLLNode* curr = head;
+    SLLNode* result;
+    
+    // find the mid point of linked list
+    while (fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    
+    SLLNode* right = reverseLinkedList(slow);
+    SLLNode* left = head->next;
+    result = head;
+    curr = right;
+    
+    // traverse simultaneously from left and right of the linked list
+    // and add the node to new linked list
+    while (curr != result) {
+        result->next = curr;
+        result = result->next;
+        
+        if (curr == left) {
+            curr = right;
+            left = left->next;
+        }else{
+            curr = left;
+            right = right->next;
+        }
+    }
+    
+    return head;
+}
+
+int main(){
+    SLLNode* a = new SLLNode(0);
+    zipLinkedList(a)->PrintListNode(); // 0
+    cout << endl;
+    
+    a = new SLLNode(0);
+    a->Emplace(1);
+    zipLinkedList(a)->PrintListNode(); // 0 1
+    cout << endl;
+    
+    a = new SLLNode(0);
+    a->Emplace(1)->Emplace(2);
+    zipLinkedList(a)->PrintListNode(); // 0 2 1
+    cout << endl;
+    
+    a = new SLLNode(0);
+    a->Emplace(1)->Emplace(2)->Emplace(3);
+    zipLinkedList(a)->PrintListNode(); // 0 3 1 2
+    cout << endl;
+    
+    
+    a = new SLLNode(0);
+    a->Emplace(1)->Emplace(2)->Emplace(3)->Emplace(4)->Emplace(5)->Emplace(6)->Emplace(7);
+    zipLinkedList(a)->PrintListNode(); // 0 7 1 6 2 5 3 4
+    cout << endl;
+}
+
+
+
+
+
+
 
 
