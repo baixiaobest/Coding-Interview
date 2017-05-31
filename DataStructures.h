@@ -21,11 +21,11 @@ struct TreeNode{
         left = nullptr;
         right = nullptr;
     }
-    
+
     void leftAttach(TreeNode* leftNode){
         left = leftNode;
     }
-    
+
     void rightAttach(TreeNode* rightNode){
         right = rightNode;
     }
@@ -51,7 +51,7 @@ struct DLTreeNode{
         left = leftNode;
         leftNode->parent = this;
     }
-    
+
     void rightAttach(DLTreeNode* rightNode){
         if(right != nullptr)
             right->parent = nullptr;
@@ -93,19 +93,47 @@ void postorderPrint(TreeNode* root){
 struct SLLNode{
     int data;
     SLLNode* next;
-    
+
     SLLNode(int val){
         data = val;
         next = nullptr;
     }
-    
+
     SLLNode* Emplace(int val){
         next = new SLLNode(val);
         return next;
     }
-    
+
     void PrintListNode(){
         SLLNode* ptr = this;
+        while(ptr){
+            std::cout << ptr->data << " ";
+            ptr = ptr->next;
+        }
+    }
+};
+
+
+/////////////////////////////////////////////////////////////////////
+
+struct JumpNode{
+    int data;
+    JumpNode* next;
+    JumpNode* jump;
+
+    JumpNode(int val){
+        data = val;
+        next = nullptr;
+        jump = nullptr;
+    }
+
+    JumpNode* Emplace(int val){
+        next = new JumpNode(val);
+        return next;
+    }
+
+    void PrintListNode(){
+        JumpNode* ptr = this;
         while(ptr){
             std::cout << ptr->data << " ";
             ptr = ptr->next;

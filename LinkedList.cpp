@@ -330,12 +330,12 @@ SLLNode* evenOddMerge(SLLNode* head){
 /////////////////////////////////////////////////////////////////////
 
 SLLNode* deleteNode(SLLNode* head, SLLNode* node){
-    
+
     // deleting the linked list with single element
     if(!head->next && head==node){
         head = nullptr;
         delete node;
-        
+
     // node is the last element
     }else if (!node->next) {
         SLLNode* ptr = head;
@@ -343,9 +343,9 @@ SLLNode* deleteNode(SLLNode* head, SLLNode* node){
             ptr = ptr->next;
         }
         ptr->next = nullptr;
-    
+
         delete node;
-        
+
     // node is in the middle of the list
     }else{
         node->data = node->next->data;
@@ -357,22 +357,22 @@ SLLNode* deleteNode(SLLNode* head, SLLNode* node){
 
 //int main(){
 //    SLLNode* a = new SLLNode(1);
-//    
+//
 //    // delete list with single element
 //    assert(deleteNode(a, a) == nullptr);
-//    
+//
 //    // delete element from the last
 //    a = new SLLNode(1);
 //    SLLNode* aTail = a->Emplace(2)->Emplace(3)->Emplace(4);
 //    deleteNode(a, aTail)->PrintListNode();   // 1 2 3
 //    cout << endl;
-//    
-//    
+//
+//
 //    // delete element in the middle
 //    SLLNode* a2 = a->next;
 //    deleteNode(a, a2)->PrintListNode();  // 1 3
 //    cout << endl;
-//    
+//
 //    // delete first element from list of size more than 1
 //    deleteNode(a, a)->PrintListNode(); // 3
 //}
@@ -389,7 +389,7 @@ SLLNode* deleteKthLastNode(SLLNode* head, int k){
     SLLNode* slow = head;
     SLLNode* fast = head;
     SLLNode* prev = head;
-    
+
     // offset the fast pointer by K
     while (fast && k > 0) {
         fast = fast->next;
@@ -397,7 +397,7 @@ SLLNode* deleteKthLastNode(SLLNode* head, int k){
     }
     // k is larger than size of linked list
     if (!fast) return head;
-	
+
     // move fast and slow pointers at the same pace
     // record previout pointer of slow, convinient for deletion
     while (fast->next) {
@@ -405,16 +405,16 @@ SLLNode* deleteKthLastNode(SLLNode* head, int k){
         prev = slow;
         slow = slow->next;
     }
-    
+
     // slow is pointing at head, move the head to second node
     if (slow == head) {
         head = head->next;
     }
-    
+
     // delete the node pointed by slow pointer
     prev->next = slow->next;
     delete slow;
-    
+
     return head;
 }
 
@@ -422,25 +422,25 @@ SLLNode* deleteKthLastNode(SLLNode* head, int k){
 //int main(){
 //	SLLNode* a = new SLLNode(1);
 //    assert(deleteKthLastNode(a, 0) == nullptr);
-//    
+//
 //    a = new SLLNode(1);
 //    a->Emplace(2)->Emplace(3)->Emplace(4)->Emplace(5)->Emplace(6);
-//    
+//
 //    // k out of range
 //    a = deleteKthLastNode(a, 6);
 //    a->PrintListNode(); // 1 2 3 4 5 6
 //    cout << endl;
-//    
+//
 //    // kth last node is the last node
 //    a = deleteKthLastNode(a, 0);
 //    a->PrintListNode(); // 1 2 3 4 5
 //    cout << endl;
-//    
+//
 //    // kth last node is the first node
 //    a = deleteKthLastNode(a, 4);
 //    a->PrintListNode(); // 2 3 4 5
 //    cout << endl;
-//    
+//
 //    // kth last node is the middle node
 //    a = deleteKthLastNode(a, 2);
 //    a->PrintListNode(); //2 4 5;
@@ -455,29 +455,29 @@ SLLNode* deleteKthLastNode(SLLNode* head, int k){
 
 SLLNode* reverseLinkedList(SLLNode* head){
     if(!head) return head;
-    
+
     SLLNode* left = head;
     SLLNode* right = head->next;
     head->next = nullptr;
-    
+
     while (right) {
         SLLNode* next = right->next;
         right->next = left;
         left = right;
         right = next;
     }
-    
+
     return left;
 }
 
 
 //int main(){
 //    SLLNode* a = new SLLNode(1);
-//    
+//
 //    a = reverseLinkedList(a);
 //    a->PrintListNode();         // 1
 //    cout << endl;
-//    
+//
 //    a->Emplace(2)->Emplace(3)->Emplace(4)->Emplace(5)->Emplace(6)->Emplace(7);
 //    a = reverseLinkedList(a);
 //    a->PrintListNode();
@@ -492,18 +492,18 @@ SLLNode* reverseLinkedList(SLLNode* head){
 // this function will modify original linked list
 bool isPalindrome(SLLNode* head){
     if (!head) return false;
-    
+
     SLLNode* slow = head;
     SLLNode* fast = head;
     SLLNode* reversedList;
-    
+
     // find the middle of linked list
     while (fast && fast->next) {
         fast = fast->next->next;
         slow = slow->next;
     }
     reversedList = reverseLinkedList(slow);
-    
+
     while (reversedList) {
         if (head->data != reversedList->data) {
             return false;
@@ -511,7 +511,7 @@ bool isPalindrome(SLLNode* head){
         head = head->next;
         reversedList = reversedList->next;
     }
-    
+
     return true;
 }
 
@@ -520,24 +520,24 @@ bool isPalindrome(SLLNode* head){
 //    SLLNode* a = new SLLNode(1);
 //
 //    assert(isPalindrome(a));
-//    
+//
 //    a = new SLLNode(1);
 //    a->Emplace(1);
 //    assert(isPalindrome(a));
-//    
+//
 //    a = new SLLNode(1);
 //    a->Emplace(2);
 //    a->Emplace(1);
 //    assert(isPalindrome(a));
-//    
+//
 //    a = new SLLNode(1);
 //    a->Emplace(2)->Emplace(3)->Emplace(2)->Emplace(1);
 //    assert(isPalindrome(a));
-//    
+//
 //    a = new SLLNode(1);
 //    a->Emplace(2);
 //    assert(!isPalindrome(a));
-//    
+//
 //    a = new SLLNode(1);
 //    a->Emplace(2)->Emplace(3)->Emplace(1)->Emplace(1);
 //    assert(!isPalindrome(a));
@@ -556,29 +556,29 @@ SLLNode* zipLinkedList(SLLNode* head){
     if (!head || !head->next) {
         return head;
     }
-    
+
     SLLNode* slow = head;
     SLLNode* fast = head;
     SLLNode* curr = head;
     SLLNode* result;
-    
+
     // find the mid point of linked list
     while (fast && fast->next) {
         slow = slow->next;
         fast = fast->next->next;
     }
-    
+
     SLLNode* right = reverseLinkedList(slow);
     SLLNode* left = head->next;
     result = head;
     curr = right;
-    
+
     // traverse simultaneously from left and right of the linked list
     // and add the node to new linked list
     while (curr != result) {
         result->next = curr;
         result = result->next;
-        
+
         if (curr == left) {
             curr = right;
             left = left->next;
@@ -587,40 +587,100 @@ SLLNode* zipLinkedList(SLLNode* head){
             right = right->next;
         }
     }
-    
+
     return head;
 }
 
-int main(){
-    SLLNode* a = new SLLNode(0);
-    zipLinkedList(a)->PrintListNode(); // 0
-    cout << endl;
-    
-    a = new SLLNode(0);
-    a->Emplace(1);
-    zipLinkedList(a)->PrintListNode(); // 0 1
-    cout << endl;
-    
-    a = new SLLNode(0);
-    a->Emplace(1)->Emplace(2);
-    zipLinkedList(a)->PrintListNode(); // 0 2 1
-    cout << endl;
-    
-    a = new SLLNode(0);
-    a->Emplace(1)->Emplace(2)->Emplace(3);
-    zipLinkedList(a)->PrintListNode(); // 0 3 1 2
-    cout << endl;
-    
-    
-    a = new SLLNode(0);
-    a->Emplace(1)->Emplace(2)->Emplace(3)->Emplace(4)->Emplace(5)->Emplace(6)->Emplace(7);
-    zipLinkedList(a)->PrintListNode(); // 0 7 1 6 2 5 3 4
-    cout << endl;
+//int main(){
+//    SLLNode* a = new SLLNode(0);
+//    zipLinkedList(a)->PrintListNode(); // 0
+//    cout << endl;
+//
+//    a = new SLLNode(0);
+//    a->Emplace(1);
+//    zipLinkedList(a)->PrintListNode(); // 0 1
+//    cout << endl;
+//
+//    a = new SLLNode(0);
+//    a->Emplace(1)->Emplace(2);
+//    zipLinkedList(a)->PrintListNode(); // 0 2 1
+//    cout << endl;
+//
+//    a = new SLLNode(0);
+//    a->Emplace(1)->Emplace(2)->Emplace(3);
+//    zipLinkedList(a)->PrintListNode(); // 0 3 1 2
+//    cout << endl;
+//
+//
+//    a = new SLLNode(0);
+//    a->Emplace(1)->Emplace(2)->Emplace(3)->Emplace(4)->Emplace(5)->Emplace(6)->Emplace(7);
+//    zipLinkedList(a)->PrintListNode(); // 0 7 1 6 2 5 3 4
+//    cout << endl;
+//}
+
+
+
+/////////////////////////////////////////////////////////////////////
+// Copy Linked list with a node containing random jump pointer
+/////////////////////////////////////////////////////////////////////
+
+
+JumpNode* CopyLinkedList(JumpNode* head){
+    if(!head)
+        return head;
+
+    JumpNode* ptr = head;
+    JumpNode* newHead;
+
+    // traverse old linked list
+    // make new node and zigzag old list nodes with new list nodes
+    while(ptr){
+        JumpNode* newNode = new JumpNode(ptr->data);
+        newNode->next = ptr->next;
+        ptr->next = newNode;
+        ptr = newNode->next;
+    }
+
+    // traverse new linked list
+    // connect each new node jump pointer to proper node
+    ptr = head;
+    while(ptr){
+        if(ptr->jump){
+            ptr->next->jump = ptr->jump->next;
+        }
+        ptr = ptr->next->next;
+    }
+    newHead = head->next;
+
+    // traverse both linked list
+    // remove the zigzag structure and separate them into two linked lists
+    ptr = head;
+    while(ptr->next){
+        JumpNode* temp = ptr->next;
+        ptr->next = temp->next;
+        ptr = temp;
+    }
+    return newHead;
 }
 
 
+int main(){
+    JumpNode* a = new JumpNode(0);
+    JumpNode* b = new JumpNode(1);
+    JumpNode* c = new JumpNode(2);
+    JumpNode* d = new JumpNode(3);
+    a->next = b; b->next = c; c->next = d;
+    a->jump = c; b->jump = d; c->jump = b; d->jump = d;
+    a->PrintListNode();            // 0 1 2 3
+    cout << endl;
 
-
+    JumpNode* newA = CopyLinkedList(a);
+    newA->PrintListNode();         // 0 1 2 3
+    assert(newA->jump == newA->next->next);
+    assert(newA->next->jump == newA->next->next->next);
+    assert(newA->next->next->jump == newA->next);
+    assert(newA->next->next->next == newA->next->next->next);
+}
 
 
 
