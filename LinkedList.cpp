@@ -664,23 +664,23 @@ JumpNode* CopyLinkedList(JumpNode* head){
 }
 
 
-int main(){
-    JumpNode* a = new JumpNode(0);
-    JumpNode* b = new JumpNode(1);
-    JumpNode* c = new JumpNode(2);
-    JumpNode* d = new JumpNode(3);
-    a->next = b; b->next = c; c->next = d;
-    a->jump = c; b->jump = d; c->jump = b; d->jump = d;
-    a->PrintListNode();            // 0 1 2 3
-    cout << endl;
-
-    JumpNode* newA = CopyLinkedList(a);
-    newA->PrintListNode();         // 0 1 2 3
-    assert(newA->jump == newA->next->next);
-    assert(newA->next->jump == newA->next->next->next);
-    assert(newA->next->next->jump == newA->next);
-    assert(newA->next->next->next == newA->next->next->next);
-}
+//int main(){
+//    JumpNode* a = new JumpNode(0);
+//    JumpNode* b = new JumpNode(1);
+//    JumpNode* c = new JumpNode(2);
+//    JumpNode* d = new JumpNode(3);
+//    a->next = b; b->next = c; c->next = d;
+//    a->jump = c; b->jump = d; c->jump = b; d->jump = d;
+//    a->PrintListNode();            // 0 1 2 3
+//    cout << endl;
+//
+//    JumpNode* newA = CopyLinkedList(a);
+//    newA->PrintListNode();         // 0 1 2 3
+//    assert(newA->jump == newA->next->next);
+//    assert(newA->next->jump == newA->next->next->next);
+//    assert(newA->next->next->jump == newA->next);
+//    assert(newA->next->next->next == newA->next->next->next);
+//}
 
 
 
