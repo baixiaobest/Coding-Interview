@@ -5,19 +5,65 @@
 //  Created by Baixiao Huang on 4/29/17.
 //  Copyright (c) 2017 Baixiao Huang. All rights reserved.
 //
+// total 7 problems
 
-#include "DataStructures.h"
+//#include "DataStructures.h"
 #include <iostream>
 #include <vector>
 #include <algorithm>
 #include <assert.h>
 #include <unordered_set>
+#include <queue>
 
 
 
 using namespace std;
 
+struct TreeNode{
+    int data;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int myData){
+        data = myData;
+        left = nullptr;
+        right = nullptr;
+    }
+    
+    void leftAttach(TreeNode* leftNode){
+        left = leftNode;
+    }
+    
+    void rightAttach(TreeNode* rightNode){
+        right = rightNode;
+    }
+};
 
+// doubly linked tree node
+struct DLTreeNode{
+    int data;
+    DLTreeNode* left;
+    DLTreeNode* right;
+    DLTreeNode* parent;
+    DLTreeNode(int myData){
+        data = myData;
+        left = nullptr;
+        right = nullptr;
+        parent = nullptr;
+    }
+    void leftAttach(DLTreeNode* leftNode){
+        if(left != nullptr)
+            left->parent = nullptr;
+        left = leftNode;
+        leftNode->parent = this;
+    }
+    
+    void rightAttach(DLTreeNode* rightNode){
+        if(right != nullptr)
+            right->parent = nullptr;
+        right = rightNode;
+        rightNode->parent = this;
+    }
+};
 
 
 
@@ -398,5 +444,39 @@ DLTreeNode* DLLCA_hash(DLTreeNode* root, DLTreeNode* a, DLTreeNode* b){
 //    assert(DLLCA_hash(&a, &f, &e) == &a);
 //    assert(DLLCA_hash(&a, &a, &b) == &a);
 //}
+
+
+
+/////////////////////////////////////////////////////////////////////
+// Check if a binary tree is complete
+// last layer of tree is only filled from left to right
+// nodes on other layer should have two children
+/////////////////////////////////////////////////////////////////////
+
+
+bool isCompleted(TreeNode* root){
+    if (!root) {
+        return true;
+    }
+    queue<TreeNode*> Q;
+    Q.push(root);
+    
+    bool lastLayer = false;
+    while (!Q.empty()) {
+        TreeNode* curr = Q.front();
+        Q.pop();
+        if (curr == nullptr) {
+            lastLayer = true;
+        }else if (lastLayer){
+            return false;
+        }else{
+            Q.push(curr->left);
+            Q.push(curr->right);
+        }
+    }
+    return true;
+}
+
+
 
 

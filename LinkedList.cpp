@@ -5,6 +5,7 @@
 //  Created by Baixiao Huang on 5/23/17.
 //  Copyright (c) 2017 Baixiao Huang. All rights reserved.
 //
+// total 12 problems
 
 #include "DataStructures.h"
 #include <iostream>
@@ -16,41 +17,27 @@ using namespace std;
 // merge two linked list
 /////////////////////////////////////////////////////////////////////
 
-SLLNode* mergeTwoLinkedLists(SLLNode* L, SLLNode* R){
-    if (!L) return R;
-    if (!R) return L;
-
-    SLLNode* M = nullptr;
-    SLLNode* MTail = nullptr;
-
-    while (L && R) {
-        // select the smallest node from two linked list
-        SLLNode* newNode = nullptr;
-        if(L->data > R->data){
-            newNode = R;
-            R = R->next;
+SLLNode* mergeTwoLinkedLists(SLLNode* left, SLLNode* right){
+    SLLNode* dummy = new SLLNode(0);
+    SLLNode* ptr = dummy;
+    
+    while (left && right) {
+        if (left->data < right->data) {
+            ptr->next = left;
+            left = left->next;
         }else{
-            newNode = L;
-            L = L->next;
+            ptr->next = right;
+            right = right->next;
         }
-
-        // append new node to new linked list
-        if (!M) {
-            M = newNode;
-            MTail = newNode;
-        }else{
-            MTail->next = newNode;
-            MTail = MTail->next;
-        }
+        ptr = ptr->next;
     }
-    if (L) {
-        MTail->next = L;
+    if (left) {
+        ptr->next = left;
+    }else{
+        ptr->next = right;
     }
-    if (R) {
-        MTail->next = R;
-    }
-
-    return M;
+    
+    return dummy->next;
 }
 
 
@@ -456,9 +443,8 @@ SLLNode* deleteKthLastNode(SLLNode* head, int k){
 SLLNode* reverseLinkedList(SLLNode* head){
     if(!head) return head;
 
-    SLLNode* left = head;
-    SLLNode* right = head->next;
-    head->next = nullptr;
+    SLLNode* left = nullptr;
+    SLLNode* right = head;
 
     while (right) {
         SLLNode* next = right->next;
@@ -680,6 +666,49 @@ JumpNode* CopyLinkedList(JumpNode* head){
 //    assert(newA->next->jump == newA->next->next->next);
 //    assert(newA->next->next->jump == newA->next);
 //    assert(newA->next->next->next == newA->next->next->next);
+//}
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+// Partition Linked List
+// given a linked list and a target value T, partition the linked list
+// such that all nodes less than T are listed before the nodes larger
+// and equal to T. Relative order should be preserved.
+/////////////////////////////////////////////////////////////////////
+
+SLLNode* partitionLinkedList(SLLNode* head, int target){
+    SLLNode* smallDummy = new SLLNode(0);
+    SLLNode* largeDummy = new SLLNode(0);
+    SLLNode* smallPtr = smallDummy;
+    SLLNode* largePtr = largeDummy;
+    
+    while (head) {
+        if (head->data < target) {
+            smallPtr->next = head;
+            smallPtr = smallPtr->next;
+        }else{
+            largePtr->next = head;
+            largePtr = largePtr->next;
+        }
+        
+        head = head->next;
+    }
+    // set last next pointer to null
+	largePtr->next = nullptr;
+    smallPtr->next = largeDummy->next;
+    
+    return smallDummy->next;
+}
+
+
+//int main(){
+//    SLLNode* a = new SLLNode(2);
+//    a->Emplace(4)->Emplace(3)->Emplace(5)->Emplace(1);
+//    
+//    SLLNode* ret = partitionLinkedList(a, 3);
+//    ret->PrintListNode();
 //}
 
 

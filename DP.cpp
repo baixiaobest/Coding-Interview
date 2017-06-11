@@ -5,6 +5,7 @@
 //  Created by Baixiao Huang on 5/20/17.
 //  Copyright (c) 2017 Baixiao Huang. All rights reserved.
 //
+// total 2 problems
 
 #include <iostream>
 #include <vector>

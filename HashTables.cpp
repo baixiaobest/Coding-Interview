@@ -5,6 +5,7 @@
 //  Created by Baixiao Huang on 5/2/17.
 //  Copyright (c) 2017 Baixiao Huang. All rights reserved.
 //
+// total 6 problems
 
 #include <stdio.h>
 #include <iostream>

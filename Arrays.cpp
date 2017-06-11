@@ -5,10 +5,9 @@
 //  Created by Baixiao Huang on 5/14/17.
 //  Copyright (c) 2017 Baixiao Huang. All rights reserved.
 //
+// total 14 problems
 
 #include <stdio.h>
-
-
 #include <iostream>
 #include <assert.h>
 #include <vector>
@@ -16,6 +15,7 @@
 #include <unordered_set>
 #include <algorithm>
 #include <limits.h>
+//#include "Utilities.h"
 
 using namespace std;
 
@@ -68,15 +68,6 @@ void threeWayPartition2(vector<int>& arr, int idx){
             swap(arr[ptr], arr[ptrLarge--]);
         }
     }
-}
-
-
-
-void printVecInt(vector<int>& Arr){
-    for (int i=0; i<Arr.size(); i++) {
-        cout << Arr[i] << " ";
-    }
-    cout << endl;
 }
 
 
@@ -765,12 +756,6 @@ void rotateMatrix(vector<vector<int>>& matrix){
         }
         start++;
         end--;
-    }
-}
-
-void print2DVecInt(vector<vector<int>>& matrix){
-    for (int i=0; i<matrix.size(); i++) {
-        printVecInt(matrix[i]);
     }
 }
 

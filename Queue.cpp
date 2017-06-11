@@ -5,12 +5,14 @@
 //  Created by Baixiao Huang on 6/5/17.
 //  Copyright (c) 2017 Baixiao Huang. All rights reserved.
 //
+// total 5 problems
 
 #include <iostream>
 #include <vector>
 #include <queue>
 #include <stack>
 #include <assert.h>
+//#include "Utilities.h"
 
 using namespace std;
 
@@ -32,13 +34,6 @@ struct TreeNode{
         right = rightNode;
     }
 };
-
-void printVec(vector<int>& Arr){
-    for (int i=0; i<Arr.size(); i++) {
-        cout << Arr[i] << " ";
-    }
-    cout << endl;
-}
 
 
 /////////////////////////////////////////////////////////////////////
@@ -326,10 +321,10 @@ vector<int> maxOfSlidingWindow(vector<int>& array, int WSize){
 //    vector<int> retW3 = maxOfSlidingWindow(array, 3);
 //    vector<int> retW11 = maxOfSlidingWindow(array, 11);
 //    
-//    printVec(retW1);     // 2 3 4 2 6 9 8 4 5 3 9
-//    printVec(retW2);     // 3 4 4 6 9 9 8 5 5 9
-//    printVec(retW3);     // 4 4 6 9 9 9 8 5 9
-//    printVec(retW11);    // 9
+//    printVecInt(retW1);     // 2 3 4 2 6 9 8 4 5 3 9
+//    printVecInt(retW2);     // 3 4 4 6 9 9 8 5 5 9
+//    printVecInt(retW3);     // 4 4 6 9 9 9 8 5 9
+//    printVecInt(retW11);    // 9
 //}
 
 
