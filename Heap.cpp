@@ -11,7 +11,8 @@
 #include <vector>
 #include <assert.h>
 #include <cmath>
-#include "Utilities.h"
+#include <unordered_set>
+//#include "Utilities.h"
 
 using namespace std;
 
@@ -373,6 +374,86 @@ public:
 //    }
 //    // 3 2 3 3.5 4 3.5 4
 //}
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+// find Kth smallest sum
+// Given two sorted array A and B, find the Kth smallest elements
+// of sorted array C formed by merging (sum) array A and B
+/////////////////////////////////////////////////////////////////////
+
+
+// O(klogk) time complexity O(k) space method
+/////////////////////////////////////////////////////////////////////
+
+
+class SumCompare{
+public:
+    bool operator()(const pair<int, pair<int, int>>& lhs, const pair<int, pair<int, int>>& rhs) const
+    {
+        return lhs.first > rhs.first;
+    }
+};
+
+class PosHash{
+public:
+    size_t operator()(const pair<int, int>& pos) const{
+        return pos.first ^ pos.second;
+    }
+};
+
+// assume k is no larger than A.size() * B.size();
+int findKthSmallestSum(vector<int>& A, vector<int>& B, int k){
+    SumCompare cmp;
+    priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, SumCompare> minHeap(cmp);
+    unordered_set<pair<int, int>, PosHash> hash;
+    int currSum = -1;
+    
+    minHeap.emplace(A[0]+B[0], pair<int, int>(0, 0));
+    hash.emplace(0, 0);
+    
+    while (k >= 0) {
+        currSum = minHeap.top().first;
+        int i = minHeap.top().second.first;
+        int j = minHeap.top().second.second;
+        minHeap.pop();
+        
+        if (i + 1 < A.size() && hash.find(pair<int, int>(i+1, j)) == hash.end()) {
+            minHeap.emplace(A[i+1]+B[j], pair<int, int>(i+1, j));
+            hash.emplace(i+1,j);
+        }
+        
+        if (j+1 < B.size() && hash.find(pair<int, int>(i, j+1)) == hash.end()) {
+            minHeap.emplace(A[i]+B[j+1], pair<int, int>(i, j+1));
+            hash.emplace(i, j+1);
+        }
+        k--;
+    }
+    return currSum;
+}
+
+//int main(){
+//    vector<int> A = {1, 4, 5, 10};
+//    vector<int> B = {2, 6, 6, 7, 12, 14};
+//    vector<int> answers;
+//    for (int i=0; i<A.size(); i++) {
+//        for (int j=0; j<B.size(); j++) {
+//            answers.push_back(A[i]+B[j]);
+//        }
+//    }
+//    sort(answers.begin(), answers.end());
+//
+//    for (int i=0; i<A.size()*B.size(); i++) {
+//        assert(findKthSmallestSum(A, B, i) == answers[i]);
+//    }
+//}
+
+
+
+
+
 
 
 
