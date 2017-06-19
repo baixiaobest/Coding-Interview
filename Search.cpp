@@ -11,7 +11,7 @@
 #include <assert.h>
 #include <queue>
 #include <unordered_set>
-#include "Utilities.h"
+//#include "Utilities.h"
 
 using namespace std;
 
@@ -703,4 +703,31 @@ vector<int> searchCloseArray(vector<int>& arr, int k){
 
 
 
+/////////////////////////////////////////////////////////////////////
+// Majority Find
+// In unsorted array A, MORE THAN HALF of the elements are e.
+// design a one pass algorithm to find e.
+/////////////////////////////////////////////////////////////////////
 
+
+int majorityFind(vector<int>& arr){
+    int candidate = 0;
+    int count = 0;
+    
+    for (int i=0; i<arr.size(); i++) {
+        if (count == 0) {
+            candidate = arr[i];
+            count++;
+        }else if(arr[i] == candidate){
+            count++;
+        }else{
+            count--;
+        }
+    }
+    return candidate;
+}
+
+//int main(){
+//    vector<int> arr = {3,4,1,3,4,3,3,1,3,3};
+//    assert(majorityFind(arr) == 3);
+//}
