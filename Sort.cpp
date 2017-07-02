@@ -10,6 +10,7 @@
 #include <vector>
 #include <unordered_map>
 #include <assert.h>
+#include <list>
 #include "Utilities.h"
 
 using namespace std;
@@ -157,16 +158,13 @@ vector<int> intersectionOfTwoSortedArrays(vector<int>& A, vector<int>& B){
 // solution 2: sort the array and remove duplicates. O(N) time, O(1) space
 
 void removeDuplicates(vector<int>& arr){
-    if (arr.size() == 0) {
-        return;
-    }
     
     sort(arr.begin(), arr.end());
-    int slowPtr=1;
-    int fastPtr=1;
+    int slowPtr=0;
+    int fastPtr=0;
     
     while (fastPtr < arr.size()) {
-        if (arr[fastPtr] == arr[fastPtr-1]) {
+        if (fastPtr !=0 && arr[fastPtr] == arr[fastPtr-1]) {
             fastPtr++;
         }else{
         	arr[slowPtr] = arr[fastPtr];
@@ -379,6 +377,131 @@ vector<pair<int, int>> unionOfSimpleIntervals(vector<pair<int, int>>& intervals)
 //    vector<pair<int, int>> res = unionOfSimpleIntervals(intervals);
 //
 //}
+
+
+
+/////////////////////////////////////////////////////////////////////
+// Given a set of intervals, find the minimum points that require to
+// cover all the intervals
+/////////////////////////////////////////////////////////////////////
+
+class LeftCompare{
+public:
+    bool operator()(const pair<int, int>& lhs, const pair<int, int>& rhs) const{
+        return lhs.first > rhs.first;
+    }
+};
+
+class RightCompare{
+public:
+    bool operator()(const pair<int, int>& lhs, const pair<int, int>& rhs) const{
+        return lhs.second > rhs.second;
+    }
+};
+
+vector<int> findCoveringPoints(vector<pair<int, int>>& intervals){
+    vector<int> ret;
+    vector<pair<int, int>> leftOrder;
+    vector<pair<int, int>> rightOrder;
+    
+    copy(intervals.begin(), intervals.end(), back_inserter(leftOrder));
+    copy(intervals.begin(), intervals.end(), back_inserter(rightOrder));
+    sort(leftOrder.begin(), leftOrder.end(), LeftCompare());
+    sort(rightOrder.begin(), rightOrder.end(), RightCompare());
+    
+    while (!rightOrder.empty()) {
+        int curr = rightOrder.back().second;
+        ret.push_back(curr);
+        
+        while (!leftOrder.empty() && leftOrder.back().first <= curr) {
+            rightOrder.erase(find(rightOrder.begin(), rightOrder.end(), leftOrder.back()));
+            leftOrder.pop_back();
+        }
+    }
+    
+    return ret;
+}
+
+
+//int main(){
+//    vector<pair<int, int>> intervals = {{0,3},{2,4},{1,8},{1,3},{4,6},{7,10},{8,11},{11,13},{13,14},{10,13}};
+//    vector<int> ret = findCoveringPoints(intervals);
+//    printVecInt(ret); // 3 6 10 13
+//
+//}
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+// Three Sum
+/////////////////////////////////////////////////////////////////////
+
+
+bool threeSum(vector<int>& arr, int target){
+    sort(arr.begin(), arr.end());
+    
+    for (int i=1; i<arr.size()-1; i++) {
+        int left = 0;
+        int right = arr.size()-1;
+        while (left < i && right > i) {
+            int sum = arr[left] + arr[i] + arr[right];
+            if (sum < target) {
+                left++;
+            }else if(sum > target){
+                right--;
+            }else{
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+//int main(){
+//    vector<int> arr = {1, 3, 5, 6, 8};
+//    assert(threeSum(arr, 9) == true);
+//    assert(threeSum(arr, 8) == false);
+//    assert(threeSum(arr, 12) == true);
+//    assert(threeSum(arr, 17) == true);
+//    assert(threeSum(arr, 20) == false);
+//}
+
+
+
+/////////////////////////////////////////////////////////////////////
+// Pancake Sorting
+/////////////////////////////////////////////////////////////////////
+
+void flip(vector<int>& arr, int k){
+    k = k >= arr.size() ? arr.size()-1 : k;
+    reverse(arr.begin(), arr.begin() + k + 1);
+}
+
+
+void pancakeSorting(vector<int>& arr){
+    for (int i=arr.size()-1; i >= 0; i--) {
+        int maxIdx = i;
+        int max = arr[i];
+        for (int j=i-1; j>=0; j--) {
+            if (arr[j] > max) {
+                maxIdx = j;
+                max = arr[j];
+            }
+        }
+        flip(arr, maxIdx);
+        flip(arr, i);
+    }
+}
+
+
+//int main(){
+//    vector<int> arr = {3,1,7,5,9,8,2,4,6};
+//    pancakeSorting(arr);
+//    printVecInt(arr);
+//}
+
+
 
 
 

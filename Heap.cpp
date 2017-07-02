@@ -53,10 +53,43 @@ vector<int> mergeKArrays(vector<vector<int>>& KArrays){
     return ret;
 }
 
+
+class heapCompare2{
+public:
+    bool operator()(const pair<vector<int>::iterator, vector<int>::iterator>& a, const pair<vector<int>::iterator, vector<int>::iterator>& b) const
+    {
+        return *(a.first) > *(b.first);
+    }
+};
+
+vector<int> mergeKArrays2(vector<vector<int>>& KArrays){
+    priority_queue<pair<vector<int>::iterator, vector<int>::iterator>, vector<pair<vector<int>::iterator, vector<int>::iterator>>, heapCompare2> minHeap;
+    vector<int> ret;
+    
+    for (int i=0; i<KArrays.size(); i++) {
+        minHeap.emplace(KArrays[i].begin(), KArrays[i].end());
+    }
+    
+    while (!minHeap.empty()) {
+        auto curr = minHeap.top();
+        minHeap.pop();
+        
+        ret.push_back(*curr.first);
+        curr.first++;
+        
+        if (curr.first != curr.second) {
+            minHeap.push(curr);
+        }
+    }
+    return ret;
+}
+
+
+
 //int main(){
 //    vector<vector<int>> arrays = {{1,4,5,35,67},{0,1,3,5},{9,10,13,15,23},{100}};
-//    vector<int> merged = mergeKArrays(arrays);
-//    printVecInt(merged);
+//    vector<int> merged = mergeKArrays2(arrays);
+//    printVecInt(merged); // 0 1 1 3 4 5 5 9 10 13 15 23 35 67 100
 //}
 
 
