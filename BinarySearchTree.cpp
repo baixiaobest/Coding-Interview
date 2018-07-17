@@ -481,8 +481,75 @@ vector<int> getRange(TreeNode* root, int min, int max){
 
 
 
+/////////////////////////////////////////////////////////////////////
+// Descendant and Ancestor
+// given three distinct tree nodes r, s and m, determine if
+// {r,s} contains both ancestor and descendant of node m.
+/////////////////////////////////////////////////////////////////////
 
 
+bool descendantAndAncestor(TreeNode* r, TreeNode* s, TreeNode* m){
+    TreeNode* rPtr = r;
+    TreeNode* sPtr = s;
+    bool mFound = false;
+    
+    while (rPtr) {
+        if (rPtr == m) {
+            mFound = true;
+        }
+        
+        if (rPtr == s) {
+            return mFound;
+        }else if(rPtr->data > s->data){
+            rPtr = rPtr->left;
+        }else{
+            rPtr = rPtr->right;
+        }
+    }
+    
+    mFound = false;
+    
+    while (sPtr) {
+        if (sPtr == m) {
+            mFound = true;
+        }
+        
+        if (sPtr == r) {
+            return mFound;
+        }else if(sPtr->data > r->data){
+            sPtr = sPtr->left;
+        }else{
+            sPtr = sPtr->right;
+        }
+    }
+    
+    return false;
+}
+
+
+//int main(){
+//    TreeNode* root = new TreeNode(11);
+//    TreeNode* a = new TreeNode(5);
+//    TreeNode* b = new TreeNode(17);
+//    root->leftAttach(a);
+//    root->rightAttach(b);
+//    TreeNode* c = new TreeNode(3);
+//    TreeNode* d = new TreeNode(7);
+//    a->leftAttach(c);
+//    a->rightAttach(d);
+//    TreeNode* e = new TreeNode(2);
+//    c->leftAttach(e);
+//    TreeNode* f = new TreeNode(13);
+//    TreeNode* g = new TreeNode(23);
+//    b->leftAttach(f);
+//    b->rightAttach(g);
+//    TreeNode* h = new TreeNode(19);
+//    g->leftAttach(h);
+//    
+//    assert(descendantAndAncestor(root, g, h) == false);
+//    assert(descendantAndAncestor(root, h, g) == true);
+//    assert(descendantAndAncestor(root, f, h) == false);
+//}
 
 
 
